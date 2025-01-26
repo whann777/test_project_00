@@ -10,7 +10,9 @@ Original file is located at
 import streamlit as st
 import random
 
+st.set_page_config(layout='wide')
 st.title('Test Streamlit')
+
 st.write('Hi!')
 
 if st.button('Generate Random Number'):
