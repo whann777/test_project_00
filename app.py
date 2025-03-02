@@ -8,13 +8,251 @@ Original file is located at
 """
 
 import streamlit as st
-import random
+import pandas as pd
+from PIL import Image
+import io
+import base64
+import time
 
-st.set_page_config(layout='wide')
-st.title('Test Streamlit')
+# Set page configuration
+st.set_page_config(page_title="User Registration System", layout="wide")
 
-st.write('Hi!')
+# Initialize session state variables if they don't exist
+if 'current_step' not in st.session_state:
+    st.session_state['current_step'] = 'start'
+if 'user_data' not in st.session_state:
+    st.session_state['user_data'] = {
+        'name': '',
+        'surname': '',
+        'telephone': '',
+        'location': '',
+        'skills': ''
+    }
+if 'documents' not in st.session_state:
+    st.session_state['documents'] = {
+        'id_card': None,
+        'passport': None,
+        'work_permit': None,
+        'visa': None
+    }
+if 'verification_status' not in st.session_state:
+    st.session_state['verification_status'] = 'pending'
 
-if st.button('Generate Random Number'):
-    random_number = random.randint(1,100)
-    st.write(f'Random Number: {random_number}')
+# Custom CSS for styling
+st.markdown("""
+<style>
+    .main-header {text-align: center; font-size: 2.5em; margin-bottom: 30px;}
+    .sub-header {text-align: center; font-size: 1.5em; margin-bottom: 20px;}
+    .document-box {
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 15px;
+        margin: 10px;
+        text-align: center;
+    }
+    .profile-box {
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 20px;
+        margin-top: 20px;
+    }
+    .verification-diamond {
+        width: 150px;
+        height: 150px;
+        margin: 0 auto;
+        transform: rotate(45deg);
+        background-color: #f5f5f5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid #333;
+    }
+    .verification-text {
+        transform: rotate(-45deg);
+        font-weight: bold;
+        text-align: center;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# Navigation functions
+def go_to_registration():
+    st.session_state['current_step'] = 'registration'
+
+def go_to_documents():
+    st.session_state['current_step'] = 'documents'
+
+def go_to_verification():
+    st.session_state['current_step'] = 'verification'
+
+def go_to_profile():
+    st.session_state['current_step'] = 'profile'
+
+def re_verify():
+    st.session_state['verification_status'] = 'pending'
+    st.session_state['current_step'] = 'verification'
+
+# Start page with circular node
+if st.session_state['current_step'] == 'start':
+    st.markdown("<h1 class='main-header'>Welcome to Registration System</h1>", unsafe_allow_html=True)
+    
+    col1, col2, col3 = st.columns([1, 1, 1])
+    with col2:
+        st.markdown("""
+        <div style="display: flex; justify-content: center; margin-bottom: 30px;">
+            <div style="width: 100px; height: 100px; background-color: black; border-radius: 50%;"></div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        st.button("Begin Registration Process", on_click=go_to_registration, use_container_width=True)
+
+# Registration page
+elif st.session_state['current_step'] == 'registration':
+    st.markdown("<h1 class='main-header'>User Registration</h1>", unsafe_allow_html=True)
+    
+    with st.form("registration_form"):
+        st.text_input("Name", key="name_input", value=st.session_state['user_data']['name'])
+        st.text_input("Surname", key="surname_input", value=st.session_state['user_data']['surname'])
+        st.text_input("Telephone number", key="telephone_input", value=st.session_state['user_data']['telephone'])
+        st.text_input("Location (Work Area)", key="location_input", value=st.session_state['user_data']['location'])
+        st.text_area("Skills", key="skills_input", value=st.session_state['user_data']['skills'])
+        
+        submitted = st.form_submit_button("Continue to Document Upload")
+        
+        if submitted:
+            # Save form data to session state
+            st.session_state['user_data']['name'] = st.session_state.name_input
+            st.session_state['user_data']['surname'] = st.session_state.surname_input
+            st.session_state['user_data']['telephone'] = st.session_state.telephone_input
+            st.session_state['user_data']['location'] = st.session_state.location_input
+            st.session_state['user_data']['skills'] = st.session_state.skills_input
+            
+            go_to_documents()
+            st.rerun()
+
+# Document upload page
+elif st.session_state['current_step'] == 'documents':
+    st.markdown("<h1 class='main-header'>Upload Documents</h1>", unsafe_allow_html=True)
+    st.markdown("<p class='sub-header'>Please upload the required documents</p>", unsafe_allow_html=True)
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.markdown("<div class='document-box'>", unsafe_allow_html=True)
+        st.markdown("บัตรประชาชน (คนไทย)<br>ID Card (Thai)", unsafe_allow_html=True)
+        id_card = st.file_uploader("Upload ID Card", type=["jpg", "jpeg", "png", "pdf"], key="id_card_uploader")
+        if id_card is not None:
+            st.session_state['documents']['id_card'] = id_card.name
+            st.success(f"Uploaded: {id_card.name}")
+        st.markdown("</div>", unsafe_allow_html=True)
+        
+        st.markdown("<div class='document-box'>", unsafe_allow_html=True)
+        st.markdown("Work permit (ต่างชาติ)<br>Work Permit (Foreigner)", unsafe_allow_html=True)
+        work_permit = st.file_uploader("Upload Work Permit", type=["jpg", "jpeg", "png", "pdf"], key="work_permit_uploader")
+        if work_permit is not None:
+            st.session_state['documents']['work_permit'] = work_permit.name
+            st.success(f"Uploaded: {work_permit.name}")
+        st.markdown("</div>", unsafe_allow_html=True)
+    
+    with col2:
+        st.markdown("<div class='document-box'>", unsafe_allow_html=True)
+        st.markdown("Passport (ต่างชาติ)<br>Passport (Foreigner)", unsafe_allow_html=True)
+        passport = st.file_uploader("Upload Passport", type=["jpg", "jpeg", "png", "pdf"], key="passport_uploader")
+        if passport is not None:
+            st.session_state['documents']['passport'] = passport.name
+            st.success(f"Uploaded: {passport.name}")
+        st.markdown("</div>", unsafe_allow_html=True)
+        
+        st.markdown("<div class='document-box'>", unsafe_allow_html=True)
+        st.markdown("ใบขยาย (ต่างชาติ)<br>Visa (Foreigner)", unsafe_allow_html=True)
+        visa = st.file_uploader("Upload Visa", type=["jpg", "jpeg", "png", "pdf"], key="visa_uploader")
+        if visa is not None:
+            st.session_state['documents']['visa'] = visa.name
+            st.success(f"Uploaded: {visa.name}")
+        st.markdown("</div>", unsafe_allow_html=True)
+    
+    # Navigation buttons for document upload page
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        st.button("Continue to Verification", on_click=go_to_verification)
+
+# Verification page
+elif st.session_state['current_step'] == 'verification':
+    st.markdown("<h1 class='main-header'>Verification Process</h1>", unsafe_allow_html=True)
+    
+    # Display the diamond shape with verification status
+    st.markdown("""
+    <div class="verification-diamond">
+        <div class="verification-text">Verification<br>Process</div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Show verification status
+    if st.session_state['verification_status'] == 'pending':
+        st.info("Your documents are being verified. Please wait...")
+        # Simulate verification process with a progress bar
+        progress_bar = st.progress(0)
+        for i in range(100):
+            time.sleep(0.05)
+            progress_bar.progress(i + 1)
+        st.session_state['verification_status'] = 'approved'
+        st.success("Verification completed!")
+        
+    if st.session_state['verification_status'] == 'approved':
+        st.success("Your documents have been verified successfully!")
+        col1, col2, col3 = st.columns([1, 2, 1])
+        with col2:
+            st.button("View Your Profile", on_click=go_to_profile)
+    elif st.session_state['verification_status'] == 'rejected':
+        st.error("Verification failed. Please re-upload the correct documents.")
+        col1, col2, col3 = st.columns([1, 2, 1])
+        with col2:
+            st.button("Go Back to Document Upload", on_click=go_to_documents)
+
+# Profile page
+elif st.session_state['current_step'] == 'profile':
+    st.markdown("<h1 class='main-header'>User Profile</h1>", unsafe_allow_html=True)
+    
+    col1, col2 = st.columns([1, 1])
+    
+    with col1:
+        st.markdown("<div class='profile-box'>", unsafe_allow_html=True)
+        st.subheader("Profile")
+        st.write(f"**Name:** {st.session_state['user_data']['name']}")
+        st.write(f"**Surname:** {st.session_state['user_data']['surname']}")
+        st.write(f"**Telephone no.:** {st.session_state['user_data']['telephone']}")
+        st.write(f"**Location (Work Area):** {st.session_state['user_data']['location']}")
+        st.write(f"**Skills:** {st.session_state['user_data']['skills']}")
+        st.markdown("</div>", unsafe_allow_html=True)
+    
+    with col2:
+        st.markdown("<div class='profile-box'>", unsafe_allow_html=True)
+        st.subheader("Verification Status")
+        st.write("Your documents have been verified and approved.")
+        
+        # Display document status
+        st.write("**Uploaded Documents:**")
+        for doc_type, doc_name in st.session_state['documents'].items():
+            if doc_name:
+                st.write(f"- {doc_type.replace('_', ' ').title()}: {doc_name}")
+        st.markdown("</div>", unsafe_allow_html=True)
+        
+        # Button to re-verify if needed
+        if st.button("Re-verify Documents"):
+            st.session_state['verification_status'] = 'pending'
+            re_verify()
+            st.rerun()
+    
+    # Add logout button
+    if st.button("Logout"):
+        # Reset session state
+        for key in st.session_state.keys():
+            del st.session_state[key]
+        st.session_state['current_step'] = 'start'
+        st.rerun()
+
+# Footer
+st.markdown("<hr>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center;'>© 2025 User Registration System</p>", unsafe_allow_html=True)
