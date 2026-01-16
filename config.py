@@ -1,23 +1,37 @@
 """
 Configuration file for TTA Reconciliation System
+แก้ไข API_KEY และ folder paths ตามที่ต้องการ
 """
 
-# Application Settings
+# ===== API Configuration =====
+# ใส่ Google Gemini API Key ของคุณที่นี่
+GEMINI_API_KEY = "YOUR_API_KEY_HERE"  # เปลี่ยนเป็น API Key จริงของคุณ
+
+# ===== Folder Paths =====
+# กำหนด path ของโฟลเดอร์ที่เก็บไฟล์
+PDF_FOLDER = "./data/agreements"      # โฟลเดอร์ที่เก็บไฟล์ PDF Agreement Contract
+AP_FOLDER = "./data/ap"                # โฟลเดอร์ที่เก็บไฟล์ AP CSV
+AR_FOLDER = "./data/ar"                # โฟลเดอร์ที่เก็บไฟล์ AR CSV
+OUTPUT_FOLDER = "./data/output"        # โฟลเดอร์สำหรับเก็บผลลัพธ์
+TEMP_FOLDER = "./data/temp"            # โฟลเดอร์ temp
+
+# ===== Application Settings =====
 APP_TITLE = "TTA Reconciliation System"
 APP_ICON = "📊"
+PAGE_LAYOUT = "wide"
 
 # Gemini API Settings
 GEMINI_MODEL = "gemini-2.5-flash"
 
-# File Upload Settings
+# File Settings
 MAX_FILE_SIZE_MB = 10
-ALLOWED_PDF_EXTENSIONS = ['pdf']
-ALLOWED_CSV_EXTENSIONS = ['csv']
-ALLOWED_EXCEL_EXTENSIONS = ['xlsx', 'xls']
+ALLOWED_PDF_EXTENSIONS = ['.pdf']
+ALLOWED_CSV_EXTENSIONS = ['.csv']
+ALLOWED_EXCEL_EXTENSIONS = ['.xlsx', '.xls']
 
 # Analysis Settings
-VARIANCE_THRESHOLD = 1.0  # บาท - ส่วนต่างที่ถือว่าเท่ากับ 0
-HIGH_VARIANCE_THRESHOLD = 10.0  # เปอร์เซ็นต์ - ถือว่า variance สูง
+VARIANCE_THRESHOLD = 1.0  # บาท
+HIGH_VARIANCE_THRESHOLD = 10.0  # %
 
 # Export Settings
 EXPORT_DATE_FORMAT = "%Y%m%d_%H%M%S"
@@ -28,24 +42,23 @@ CURRENCY_FORMAT = "฿{:,.2f}"
 PERCENT_FORMAT = "{:.2f}%"
 LARGE_NUMBER_FORMAT = "{:,.0f}"
 
-# Status Icons
+# Status Icons and Colors
 STATUS_COMPLETE = "✅ ครบ"
 STATUS_OVER = "⚠️ เกิน"
 STATUS_UNDER = "❌ ขาด"
 
-# Colors for Charts
-COLOR_PRIMARY = "#2196F3"
-COLOR_SUCCESS = "#4CAF50"
-COLOR_WARNING = "#FFC107"
-COLOR_DANGER = "#F44336"
-COLOR_INFO = "#00BCD4"
-
-# Temporary Directory
-TEMP_DIR = "/tmp/tta_docs"
+# Chart Colors
+COLOR_PRIMARY = "#1E88E5"
+COLOR_SUCCESS = "#43A047"
+COLOR_WARNING = "#FB8C00"
+COLOR_DANGER = "#E53935"
+COLOR_INFO = "#00ACC1"
+COLOR_BACKGROUND = "#F5F7FA"
+COLOR_CARD = "#FFFFFF"
 
 # Session State Keys
 SESSION_MODE = "mode"
 SESSION_ANALYSIS_RESULTS = "analysis_results"
-SESSION_TEMP_DIR = "temp_dir"
 SESSION_RECON_SYSTEM = "reconciliation_system"
 SESSION_AUDITOR_DATA = "auditor_data"
+SESSION_PROCESSING_DONE = "processing_done"
