@@ -1,5 +1,5 @@
 # ไปที่โฟลเดอร์โปรเจค
-cd C:\path\to\TTA_Project
+cd C:\path\to\data
 
 # ติดตั้ง packages
 pip install -r requirements.txt
