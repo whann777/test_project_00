@@ -158,7 +158,7 @@ class TTADocumentAnalyzer:
     
     def __init__(self, api_key: str):
         genai.configure(api_key=api_key)
-        self.model_name = 'gemini-2.0-flash-exp'
+        self.model_name = 'gemini-2.5-flash'
         self.model = genai.GenerativeModel(self.model_name)
     
     def create_analysis_prompt(self) -> str:
