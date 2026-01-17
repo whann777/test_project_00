@@ -1,6 +1,6 @@
 """
 Configuration file for TTA Reconciliation System
-ใช้ Streamlit Secrets สำหรับ API Key
+API Key จะอ่านจาก Streamlit Secrets เท่านั้น
 """
 
 import streamlit as st
@@ -13,7 +13,6 @@ try:
 except Exception as e:
     # ถ้าไม่เจอ API Key จะแจ้งเตือนให้ตั้งค่า
     GEMINI_API_KEY = None
-
 
 # ===== Folder Paths =====
 # กำหนด path ของโฟลเดอร์ที่เก็บไฟล์
