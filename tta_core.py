@@ -104,7 +104,7 @@ class TTADocumentAnalyzer:
         return prompt
 
     def analyze_document(self, pdf_path: str) -> Dict:
-    """วิเคราะห์เอกสาร PDF"""
+        """วิเคราะห์เอกสาร PDF"""
         try:
             print(f"\n🤖 กำลังวิเคราะห์: {os.path.basename(pdf_path)}")
             
@@ -143,12 +143,9 @@ class TTADocumentAnalyzer:
             return result
             
         except Exception as e:
-            print(f"   ❌ Error: {str(e)}")  # เพิ่มบรรทัดนี้
-            print(f"   ❌ Error type: {type(e).__name__}")  # เพิ่มบรรทัดนี้
-            import traceback
-            print(f"   ❌ Traceback: {traceback.format_exc()}")  # เพิ่มบรรทัดนี้
+            print(f"   ❌ Error: {e}")
             return None
-        
+
     def save_summary(self, analysis_result: Dict, output_path: str):
         """บันทึกผลการวิเคราะห์เป็น JSON"""
         try:
