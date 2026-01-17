@@ -1,34 +1,30 @@
 """
 Configuration file for TTA Reconciliation System
-API Key จะอ่านจาก Streamlit Secrets เท่านั้น
+API Key will be read from Streamlit Secrets only
 """
 
-import streamlit as st
-
-# ===== API Configuration =====
-# อ่าน API Key จาก Streamlit Secrets
-# ตั้งค่าใน Streamlit Cloud: Settings > Secrets
+# API Configuration
+# Read API Key from Streamlit Secrets
 try:
+    import streamlit as st
     GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
-except Exception as e:
-    # ถ้าไม่เจอ API Key จะแจ้งเตือนให้ตั้งค่า
+except:
     GEMINI_API_KEY = None
 
-# ===== Folder Paths =====
-# กำหนด path ของโฟลเดอร์ที่เก็บไฟล์
-PDF_FOLDER = "./data/agreements"      # โฟลเดอร์ที่เก็บไฟล์ PDF Agreement Contract
-AP_FOLDER = "./data/ap"                # โฟลเดอร์ที่เก็บไฟล์ AP CSV
-AR_FOLDER = "./data/ar"                # โฟลเดอร์ที่เก็บไฟล์ AR CSV
-OUTPUT_FOLDER = "./data/output"        # โฟลเดอร์สำหรับเก็บผลลัพธ์
-TEMP_FOLDER = "./data/temp"            # โฟลเดอร์ temp
+# Folder Paths
+PDF_FOLDER = "./data/agreements"
+AP_FOLDER = "./data/ap"
+AR_FOLDER = "./data/ar"
+OUTPUT_FOLDER = "./data/output"
+TEMP_FOLDER = "./data/temp"
 
-# ===== Application Settings =====
+# Application Settings
 APP_TITLE = "TTA Reconciliation System"
 APP_ICON = "📊"
 PAGE_LAYOUT = "wide"
 
 # Gemini API Settings
-GEMINI_MODEL = "gemini-2.5-flash"
+GEMINI_MODEL = "gemini-2.0-flash-exp"
 
 # File Settings
 MAX_FILE_SIZE_MB = 10
@@ -37,8 +33,8 @@ ALLOWED_CSV_EXTENSIONS = ['.csv']
 ALLOWED_EXCEL_EXTENSIONS = ['.xlsx', '.xls']
 
 # Analysis Settings
-VARIANCE_THRESHOLD = 1.0  # บาท
-HIGH_VARIANCE_THRESHOLD = 10.0  # %
+VARIANCE_THRESHOLD = 1.0
+HIGH_VARIANCE_THRESHOLD = 10.0
 
 # Export Settings
 EXPORT_DATE_FORMAT = "%Y%m%d_%H%M%S"
