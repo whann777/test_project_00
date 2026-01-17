@@ -220,7 +220,45 @@ class TTAReconciliationSystem:
                 csv_file = csv_files[0]
             
             filepath = os.path.join(self.base_folder, csv_file) if not os.path.isabs(csv_file) else csv_file
-            self.ap_data = pd.read_csv(filepath)
+            df = pd.read_csv(filepath)
+            
+            # แปลงชื่อคอลัมน์ให้เป็นมาตรฐาน
+            column_mapping = {
+                'VNDNBR': 'VENDOR_ID',
+                'VndCode': 'VENDOR_ID',
+                'VENDOR_CODE': 'VENDOR_ID',
+                
+                'VNDNAME': 'VENDOR_NAME',
+                'VENDOR_NAME': 'VENDOR_NAME',
+                
+                'DIV': 'DIVISION_ID',
+                'DIVISION': 'DIVISION_ID',
+                'DIVISION_ID': 'DIVISION_ID',
+                
+                'DEPT': 'DEPARTMENT_ID',
+                'DEPARTMENT': 'DEPARTMENT_ID',
+                'DEPARTMENT_ID': 'DEPARTMENT_ID',
+                'DEPT_CODE': 'DEPARTMENT_ID',
+                
+                'INV_AMOUNT': 'EXTENDED_AMOUNT',
+                'INVPAYAMT': 'EXTENDED_AMOUNT',
+                'EXTENDED_AMOUNT': 'EXTENDED_AMOUNT',
+                'AMOUNT': 'EXTENDED_AMOUNT'
+            }
+            
+            # เปลี่ยนชื่อคอลัมน์
+            df = df.rename(columns=column_mapping)
+            
+            # ตรวจสอบว่ามีคอลัมน์ที่จำเป็นหรือไม่
+            required_columns = ['VENDOR_ID', 'DIVISION_ID', 'DEPARTMENT_ID', 'EXTENDED_AMOUNT']
+            missing_columns = [col for col in required_columns if col not in df.columns]
+            
+            if missing_columns:
+                print(f"❌ ไฟล์ AP ขาดคอลัมน์: {missing_columns}")
+                print(f"คอลัมน์ที่มี: {list(df.columns)}")
+                return False
+            
+            self.ap_data = df
             
             # สร้าง match key
             self.ap_data['TTA_MATCH_KEY'] = (
@@ -247,7 +285,39 @@ class TTAReconciliationSystem:
                 csv_file = csv_files[0]
             
             filepath = os.path.join(self.base_folder, csv_file) if not os.path.isabs(csv_file) else csv_file
-            self.ar_data = pd.read_csv(filepath)
+            df = pd.read_csv(filepath)
+            
+            # แปลงชื่อคอลัมน์ให้เป็นมาตรฐาน
+            column_mapping = {
+                'VNDNBR': 'VENDOR_ID',
+                'VndCode': 'VENDOR_ID',
+                'VENDOR_CODE': 'VENDOR_ID',
+                
+                'DIV': 'DIVISION_ID',
+                'DIVISION': 'DIVISION_ID',
+                
+                'DEPT': 'DEPARTMENT_ID',
+                'DEPARTMENT': 'DEPARTMENT_ID',
+                'DEPT_CODE': 'DEPARTMENT_ID',
+                
+                'EXTENDED_AMOUNT': 'EXTENDED_AMOUNT',
+                'AMOUNT': 'EXTENDED_AMOUNT',
+                'INV_AMOUNT': 'EXTENDED_AMOUNT'
+            }
+            
+            # เปลี่ยนชื่อคอลัมน์
+            df = df.rename(columns=column_mapping)
+            
+            # ตรวจสอบว่ามีคอลัมน์ที่จำเป็นหรือไม่
+            required_columns = ['VENDOR_ID', 'DIVISION_ID', 'DEPARTMENT_ID', 'REF_TYPE', 'EXTENDED_AMOUNT']
+            missing_columns = [col for col in required_columns if col not in df.columns]
+            
+            if missing_columns:
+                print(f"❌ ไฟล์ AR ขาดคอลัมน์: {missing_columns}")
+                print(f"คอลัมน์ที่มี: {list(df.columns)}")
+                return False
+            
+            self.ar_data = df
             
             # Clean REF_TYPE
             self.ar_data['REF_TYPE_CLEAN'] = self.ar_data['REF_TYPE'].str.strip().str.upper()
@@ -264,6 +334,8 @@ class TTAReconciliationSystem:
             
         except Exception as e:
             print(f"❌ Error loading AR: {e}")
+            import traceback
+            traceback.print_exc()
             return False
 
     def calculate_allowances(self) -> pd.DataFrame:
