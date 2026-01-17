@@ -3,16 +3,16 @@ Configuration file for TTA Reconciliation System
 ใช้ Streamlit Secrets สำหรับ API Key
 """
 
-import os
 import streamlit as st
 
 # ===== API Configuration =====
-# อ่าน API Key จาก Streamlit Secrets (สำหรับ Cloud)
-# หรือจาก Environment Variable (สำหรับ Local)
+# อ่าน API Key จาก Streamlit Secrets
+# ตั้งค่าใน Streamlit Cloud: Settings > Secrets
 try:
     GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
-except:
-    GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "shinchan777")
+except Exception as e:
+    # ถ้าไม่เจอ API Key จะแจ้งเตือนให้ตั้งค่า
+    GEMINI_API_KEY = None
 
 
 # ===== Folder Paths =====
