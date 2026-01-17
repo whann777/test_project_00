@@ -5,7 +5,7 @@ Configuration file for TTA Reconciliation System
 
 # ===== API Configuration =====
 # ใส่ Google Gemini API Key ของคุณที่นี่
-GEMINI_API_KEY = "AIzaSyBfd3VWbYXOCgfnegrn8wuQ0pX8OONjlXg"  # เปลี่ยนเป็น API Key จริงของคุณ
+GEMINI_API_KEY = "YOUR_API_KEY_HERE"  # เปลี่ยนเป็น API Key จริงของคุณ
 
 # ===== Folder Paths =====
 # กำหนด path ของโฟลเดอร์ที่เก็บไฟล์
