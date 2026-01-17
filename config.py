@@ -12,7 +12,7 @@ except:
     GEMINI_API_KEY = None
 
 # Folder Paths
-PDF_FOLDER = "/data/agreements"
+PDF_FOLDER = "./data/agreements"
 AP_FOLDER = "/data/ap"
 AR_FOLDER = "/data/ar"
 OUTPUT_FOLDER = "/data/output"
