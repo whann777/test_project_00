@@ -236,14 +236,19 @@ def check_folders():
 
 def main():
     # ตรวจสอบ API Key
-    if config.GEMINI_API_KEY == "YOUR_API_KEY_HERE":
-        st.error("⚠️ กรุณาใส่ Google Gemini API Key ในไฟล์ config.py")
+    if config.GEMINI_API_KEY is None:
+        st.error("⚠️ ไม่พบ API Key")
         st.info("""
-        **วิธีการตั้งค่า:**
-        1. เปิดไฟล์ `config.py`
-        2. แก้ไขบรรทัด `GEMINI_API_KEY = "YOUR_API_KEY_HERE"`
-        3. ใส่ API Key ของคุณแทน
-        4. บันทึกไฟล์และ refresh หน้านี้
+        **วิธีตั้งค่า API Key:**
+        
+        1. ไปที่ Streamlit Cloud
+        2. เลือก app ของคุณ
+        3. คลิก ⚙️ Settings > Secrets
+        4. เพิ่มบรรทัดนี้:
+        ```
+        GEMINI_API_KEY = "your_api_key_here"
+        ```
+        5. Save และรอ restart
         
         **ขอ API Key ได้ที่:** https://aistudio.google.com/app/apikey
         """)
