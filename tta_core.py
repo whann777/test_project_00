@@ -182,7 +182,19 @@ class TTAReconciliationSystem:
             
             all_data = []
             for json_file in json_files:
-                filepath = os.path.join(self.base_folder, json_file) if not os.path.isabs(json_file) else json_file
+                # ถ้าเป็น absolute path ใช้ตรงๆ ถ้าไม่ใช่ ให้ join กับ base_folder
+                if os.path.isabs(json_file):
+                    filepath = json_file
+                else:
+                    # เช็คว่าไฟล์มี path อยู่แล้วหรือไม่
+                    if os.path.dirname(json_file):
+                        # มี path อยู่แล้ว ใช้ตรงๆ
+                        filepath = json_file
+                    else:
+                        # ไม่มี path ให้ join กับ base_folder
+                        filepath = os.path.join(self.base_folder, json_file)
+                
+                print(f"Debug: Loading from {filepath}")
                 with open(filepath, 'r', encoding='utf-8') as f:
                     data = json.load(f)
                     all_data.append(data)
@@ -193,6 +205,8 @@ class TTAReconciliationSystem:
             
         except Exception as e:
             print(f"❌ Error loading TTA: {e}")
+            import traceback
+            traceback.print_exc()
             return False
 
     def load_ap_data(self, csv_file: str = None) -> bool:
