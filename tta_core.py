@@ -241,7 +241,6 @@ class TTAReconciliationSystem:
                 'DEPT_CODE': 'DEPARTMENT_ID',
                 
                 'INV_AMOUNT': 'EXTENDED_AMOUNT',
-                'INVPAYAMT': 'EXTENDED_AMOUNT',
                 'EXTENDED_AMOUNT': 'EXTENDED_AMOUNT',
                 'AMOUNT': 'EXTENDED_AMOUNT'
             }
