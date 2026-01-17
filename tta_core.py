@@ -143,7 +143,11 @@ class TTADocumentAnalyzer:
             return result
             
         except Exception as e:
-            print(f"   ❌ Error: {e}")
+            print(f"   ❌ Error Type: {type(e).__name__}")
+            print(f"   ❌ Error Message: {str(e)}")
+            import traceback
+            print(f"   ❌ Traceback:")
+            traceback.print_exc()
             return None
 
     def save_summary(self, analysis_result: Dict, output_path: str):
