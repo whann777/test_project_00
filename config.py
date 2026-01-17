@@ -1,11 +1,19 @@
 """
 Configuration file for TTA Reconciliation System
-แก้ไข API_KEY และ folder paths ตามที่ต้องการ
+ใช้ Streamlit Secrets สำหรับ API Key
 """
 
+import os
+import streamlit as st
+
 # ===== API Configuration =====
-# ใส่ Google Gemini API Key ของคุณที่นี่
-GEMINI_API_KEY = "AIzaSyBfd3VWbYXOCgfnegrn8wuQ0pX8OONjlXg"  # เปลี่ยนเป็น API Key จริงของคุณ
+# อ่าน API Key จาก Streamlit Secrets (สำหรับ Cloud)
+# หรือจาก Environment Variable (สำหรับ Local)
+try:
+    GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
+except:
+    GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "shinchan777")
+
 
 # ===== Folder Paths =====
 # กำหนด path ของโฟลเดอร์ที่เก็บไฟล์
