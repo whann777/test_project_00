@@ -13,10 +13,10 @@ except:
 
 # Folder Paths
 PDF_FOLDER = "./data/agreements"
-AP_FOLDER = "/data/ap"
-AR_FOLDER = "/data/ar"
-OUTPUT_FOLDER = "/data/output"
-TEMP_FOLDER = "/data/temp"
+AP_FOLDER = "./data/ap"
+AR_FOLDER = "./data/ar"
+OUTPUT_FOLDER = "./data/output"
+TEMP_FOLDER = "./data/temp"
 
 # Application Settings
 APP_TITLE = "TTA Reconciliation System"
