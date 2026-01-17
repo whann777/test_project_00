@@ -104,48 +104,51 @@ class TTADocumentAnalyzer:
         return prompt
 
     def analyze_document(self, pdf_path: str) -> Dict:
-        """วิเคราะห์เอกสาร PDF"""
-        try:
-            print(f"\n🤖 กำลังวิเคราะห์: {os.path.basename(pdf_path)}")
-            
-            # Upload file
-            doc_file = genai.upload_file(path=pdf_path, display_name="Trade_Term_Doc")
-            
-            # รอ Processing
-            print("   รอการประมวลผล", end='')
-            while doc_file.state.name == "PROCESSING":
-                print('.', end='')
-                time.sleep(2)
-                doc_file = genai.get_file(doc_file.name)
-            print(" ✓")
-            
-            if doc_file.state.name == "FAILED":
-                raise ValueError(f"การประมวลผลล้มเหลว: {doc_file.state.name}")
-            
-            # Generate content
-            print("   กำลังวิเคราะห์เอกสาร...")
-            prompt = self.create_analysis_prompt()
-            response = self.model.generate_content([doc_file, prompt])
-            
-            # Parse JSON
-            response_text = response.text.strip()
-            if response_text.startswith("```json"):
-                response_text = response_text[7:]
-            if response_text.endswith("```"):
-                response_text = response_text[:-3]
-            
-            result = json.loads(response_text.strip())
-            
-            # Clean up
-            genai.delete_file(doc_file.name)
-            
-            print("   ✅ วิเคราะห์สำเร็จ")
-            return result
-            
-        except Exception as e:
-            print(f"   ❌ Error: {e}")
-            return None
-
+    """วิเคราะห์เอกสาร PDF"""
+    try:
+        print(f"\n🤖 กำลังวิเคราะห์: {os.path.basename(pdf_path)}")
+        
+        # Upload file
+        doc_file = genai.upload_file(path=pdf_path, display_name="Trade_Term_Doc")
+        
+        # รอ Processing
+        print("   รอการประมวลผล", end='')
+        while doc_file.state.name == "PROCESSING":
+            print('.', end='')
+            time.sleep(2)
+            doc_file = genai.get_file(doc_file.name)
+        print(" ✓")
+        
+        if doc_file.state.name == "FAILED":
+            raise ValueError(f"การประมวลผลล้มเหลว: {doc_file.state.name}")
+        
+        # Generate content
+        print("   กำลังวิเคราะห์เอกสาร...")
+        prompt = self.create_analysis_prompt()
+        response = self.model.generate_content([doc_file, prompt])
+        
+        # Parse JSON
+        response_text = response.text.strip()
+        if response_text.startswith("```json"):
+            response_text = response_text[7:]
+        if response_text.endswith("```"):
+            response_text = response_text[:-3]
+        
+        result = json.loads(response_text.strip())
+        
+        # Clean up
+        genai.delete_file(doc_file.name)
+        
+        print("   ✅ วิเคราะห์สำเร็จ")
+        return result
+        
+    except Exception as e:
+        print(f"   ❌ Error: {str(e)}")  # เพิ่มบรรทัดนี้
+        print(f"   ❌ Error type: {type(e).__name__}")  # เพิ่มบรรทัดนี้
+        import traceback
+        print(f"   ❌ Traceback: {traceback.format_exc()}")  # เพิ่มบรรทัดนี้
+        return None
+        
     def save_summary(self, analysis_result: Dict, output_path: str):
         """บันทึกผลการวิเคราะห์เป็น JSON"""
         try:
