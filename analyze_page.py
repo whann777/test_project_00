@@ -240,11 +240,15 @@ def process_all_files():
                     
                     # บันทึก JSON
                     json_filename = pdf_file.stem + '_summary.json'
-                    json_path = Path(config.TEMP_FOLDER) / json_filename
+                    # สร้าง folder ถ้ายังไม่มี
+                    temp_folder = Path(config.TEMP_FOLDER)
+                    temp_folder.mkdir(parents=True, exist_ok=True)
+                    
+                    json_path = temp_folder / json_filename
                     analyzer.save_summary(result, str(json_path))
                     
                     analysis_results.append(result)
-                    json_files.append(str(json_path))
+                    json_files.append(str(json_path.absolute()))
                 else:
                     st.error("❌ การวิเคราะห์ล้มเหลว")
         
