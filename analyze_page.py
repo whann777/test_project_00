@@ -258,6 +258,10 @@ def process_all_files():
             
             # โหลด TTA
             st.info("📊 กำลังโหลดข้อมูล TTA...")
+            st.write(f"Debug: พบ {len(json_files)} ไฟล์ JSON")
+            for jf in json_files:
+                st.write(f"- {jf}")
+            
             tta_loaded = recon.load_tta_summaries(json_files)
             
             if tta_loaded:
@@ -311,6 +315,8 @@ def process_all_files():
                     st.error("❌ โหลดข้อมูล AP ล้มเหลว")
             else:
                 st.error("❌ โหลดข้อมูล TTA ล้มเหลว")
+                st.write(f"Debug: json_files = {json_files}")
+                st.write(f"Debug: TEMP_FOLDER = {config.TEMP_FOLDER}")
         
         st.markdown('</div>', unsafe_allow_html=True)
 
