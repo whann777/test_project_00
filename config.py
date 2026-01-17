@@ -12,11 +12,11 @@ except:
     GEMINI_API_KEY = None
 
 # Folder Paths
-PDF_FOLDER = "./data/agreements"
-AP_FOLDER = "./data/ap"
-AR_FOLDER = "./data/ar"
-OUTPUT_FOLDER = "./data/output"
-TEMP_FOLDER = "./data/temp"
+PDF_FOLDER = "/data/agreements"
+AP_FOLDER = "/data/ap"
+AR_FOLDER = "/data/ar"
+OUTPUT_FOLDER = "/data/output"
+TEMP_FOLDER = "/data/temp"
 
 # Application Settings
 APP_TITLE = "TTA Reconciliation System"
@@ -24,7 +24,7 @@ APP_ICON = "📊"
 PAGE_LAYOUT = "wide"
 
 # Gemini API Settings
-GEMINI_MODEL = "gemini-2.0-flash-exp"
+GEMINI_MODEL = "gemini-1.5-flash"
 
 # File Settings
 MAX_FILE_SIZE_MB = 10
